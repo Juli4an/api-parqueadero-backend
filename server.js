@@ -111,6 +111,33 @@ app.delete('/api/vehiculos/:id', (req, res) => {
   });
 });
 
+/**
+ * RUTA 4: ACTUALIZAR UN VEHÍCULO (UPDATE)
+ * Método HTTP: PUT
+ * Ruta: /api/vehiculos/:id
+ */
+app.put('/api/vehiculos/:id', (req, res) => {
+  const { id } = req.params;
+  const { placa, tipo } = req.body;
+
+  // Buscamos la posición del vehículo en nuestro arreglo
+  const indice = vehiculos.findIndex(v => v.id === parseInt(id));
+
+  // Si no se encuentra el vehículo, devolvemos error 404
+  if (indice === -1) {
+    return res.status(404).json({ error: "Vehículo no encontrado" });
+  }
+
+  // Actualizamos solo los campos que nos enviaron
+  if (placa) vehiculos[indice].placa = placa;
+  if (tipo) vehiculos[indice].tipo = tipo;
+
+  res.json({
+    mensaje: "Vehículo actualizado con éxito",
+    data: vehiculos[indice]
+  });
+});
+
 
 // ==========================================
 // 5. INICIALIZACIÓN DEL SERVIDOR
@@ -125,3 +152,4 @@ app.listen(PORT, () => {
   // Imprimimos un mensaje en la consola del terminal indicando que el servidor está activo.
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
+
